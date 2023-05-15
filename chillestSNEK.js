@@ -21,6 +21,7 @@ pipeSouth.src = "images/pipeSouth.png";
 var gap = 85;
 var constant;
 
+var isGameOver = 1
 var bX = 10;
 var bY = 150;
 
@@ -42,8 +43,27 @@ document.addEventListener("keydown",moveUp);
 document.addEventListener("click",moveUp);
 
 function moveUp(){
-    bY -= 25;
-    fly.play();
+
+	if(isGameOver == 1)
+	{
+		isGameOver = 0
+		gap = 85;
+		bX = 10;
+		bY = 150;
+
+		gravity = 1.5;
+
+		score = 0;
+		pipe = [];
+
+		pipe[0] = {
+		    x : cvs.width,
+		    y : 0
+		};
+	}
+	
+	bY -= 25;
+	fly.play();
 }
 
 // pipe coordinates
@@ -59,49 +79,59 @@ pipe[0] = {
 
 function draw(){
     
-    ctx.drawImage(bg,0,0);
-    
-    
-    for(var i = 0; i < pipe.length; i++){
-        
-        constant = pipeNorth.height+gap;
-        ctx.drawImage(pipeNorth,pipe[i].x,pipe[i].y);
-        ctx.drawImage(pipeSouth,pipe[i].x,pipe[i].y+constant);
-             
-        pipe[i].x--;
-        
-        if( pipe[i].x == 125 ){
-            pipe.push({
-                x : cvs.width,
-                y : Math.floor(Math.random()*pipeNorth.height)-pipeNorth.height
-            }); 
-        }
 
-        // detect collision
-        
-        if( bX + snek.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width && (bY <= pipe[i].y + pipeNorth.height || bY+snek.height >= pipe[i].y+constant) || bY + snek.height >=  cvs.height - fg.height){
-            location.reload(); // reload the page
-        }
-        
-        if(pipe[i].x == 5){
-            score++;
-            scor.play();
-        }
-        
-        
-    }
+	    ctx.drawImage(bg,0,0);
 
-    ctx.drawImage(fg,0,cvs.height - fg.height);
+	    for(var i = 0; i < pipe.length; i++){
+        
+	        constant = pipeNorth.height+gap;
+	        ctx.drawImage(pipeNorth,pipe[i].x,pipe[i].y);
+	        ctx.drawImage(pipeSouth,pipe[i].x,pipe[i].y+constant);
+            
+			if(isGameOver == 0)
+			{
+	        	pipe[i].x--;
+			}
+        
+	        if( pipe[i].x == 125 ){
+	            pipe.push({
+	                x : cvs.width,
+	                y : Math.floor(Math.random()*pipeNorth.height)-pipeNorth.height
+	            }); 
+	        }
+
+	        // detect collision
+        
+	        if( bX + snek.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width && (bY <= pipe[i].y + pipeNorth.height || bY+snek.height >= pipe[i].y+constant) || bY + snek.height >=  cvs.height - fg.height){
+            
+				isGameOver = 1
+			    ctx.fillStyle = "#FFF";
+			    ctx.font = "20px Verdana";
+			    ctx.fillText("GAME OVER",cvs.width/2 - 55,cvs.height/2);
+	        }
+        
+	
+		    if(isGameOver == 0)
+			{
+	       	 	if(pipe[i].x == 5){
+	       		 	score++;
+	        		scor.play();
+	        	}
+			}
+	    }
+
+	    ctx.drawImage(fg,0,cvs.height - fg.height);
     
-    ctx.drawImage(snek,bX,bY);
-    
-    bY += gravity;
-    
-    ctx.fillStyle = "#FFF";
-    ctx.font = "20px Verdana";
-    ctx.fillText("Score : "+score,10,cvs.height-20);
-    
-    requestAnimationFrame(draw);
+	    ctx.drawImage(snek,bX,bY);
+    	if(isGameOver == 0)
+		{
+			bY += gravity;
+		}
+
+	    ctx.fillStyle = "#FFF";
+	    ctx.font = "20px Verdana";
+	    ctx.fillText("Score : "+score,10,cvs.height-20);
+	    requestAnimationFrame(draw);
     
 }
 
