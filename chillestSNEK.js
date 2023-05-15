@@ -105,9 +105,6 @@ function draw(){
 	        if( bX + snek.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width && (bY <= pipe[i].y + pipeNorth.height || bY+snek.height >= pipe[i].y+constant) || bY + snek.height >=  cvs.height - fg.height){
             
 				isGameOver = 1
-			    ctx.fillStyle = "#FFF";
-			    ctx.font = "20px Verdana";
-			    ctx.fillText("GAME OVER",cvs.width/2 - 55,cvs.height/2);
 	        }
         
 	
@@ -131,6 +128,14 @@ function draw(){
 	    ctx.fillStyle = "#FFF";
 	    ctx.font = "20px Verdana";
 	    ctx.fillText("Score : "+score,10,cvs.height-20);
+		
+		if(isGameOver == 1)
+		{
+		    ctx.fillStyle = "#FFF";
+		    ctx.font = "20px Verdana";
+		    ctx.fillText("GAME OVER",cvs.width/2 - 55,cvs.height/2);
+		}
+		
 	    requestAnimationFrame(draw);
     
 }
